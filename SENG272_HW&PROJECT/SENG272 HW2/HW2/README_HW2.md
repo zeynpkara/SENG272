@@ -1,3 +1,6 @@
+
+IMPORTANT Note: Due to a technical git force-push error on March 29, the original commit history was lost. This assignment was originally completed and uploaded on its original deadline.
+
 # Software Quality Evaluation Tool (ISO/IEC 25010 & 25023)
 
 ## Project Description

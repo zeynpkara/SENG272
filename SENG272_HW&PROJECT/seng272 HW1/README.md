@@ -1,3 +1,5 @@
+IMPORTANT NOTE Note: Due to a technical git force-push error on March 29, the original commit history was lost. This assignment was originally completed and uploaded on its original deadline.
+
 # Lab 1: Java Swing GUI & File I/O
 [cite_start]**Course:** Software Project II [cite: 3]
 
@@ -22,3 +24,6 @@
 ## How to Run
 1. Navigate to the `src` directory.
 2. [cite_start]Compile and run `ProjectFormApp.java`[cite: 42, 47].
+
+
+   

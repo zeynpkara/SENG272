@@ -2,53 +2,77 @@ package com.isoproject.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
-    private CardLayout cardLayout;
-    private JPanel cardsPanel;
-    private JButton btnNext, btnBack;
+    private CardLayout cardLayout = new CardLayout();
+    private JPanel cardsPanel = new JPanel(cardLayout);
     private int currentStep = 1;
     private final int TOTAL_STEPS = 5;
 
+    
+    private JPanel stepIndicatorBar;
+    private ArrayList<JLabel> stepLabels = new ArrayList<>();
+
     public MainFrame() {
-        setTitle("ISO 15939 Measurement Process Simulator");
-        setSize(1000, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("ISO 15939 Measurement Simulator - Zeynep Kara");
+        setSize(1100, 750);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        cardLayout = new CardLayout();
-        cardsPanel = new JPanel(cardLayout);
+
+        createStepIndicator();
+        add(stepIndicatorBar, BorderLayout.NORTH);
+
 
         cardsPanel.add(new ProfilePanel(), "Step1");
         cardsPanel.add(new DefinePanel(), "Step2");
         cardsPanel.add(new PlanPanel(), "Step3");
         cardsPanel.add(new CollectPanel(), "Step4");
         cardsPanel.add(new AnalysePanel(), "Step5");
-        JPanel footerPanel = new JPanel(new BorderLayout());
-        footerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        footerPanel.setBackground(new Color(245, 245, 245));
+        add(cardsPanel, BorderLayout.CENTER);
 
-        btnBack = new JButton("Back");
-        btnNext = new JButton("Next");
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 25, 15));
+        footer.setBackground(Color.WHITE);
+        footer.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(230, 230, 230)));
 
-        btnNext.setPreferredSize(new Dimension(100, 35));
-        btnBack.setPreferredSize(new Dimension(100, 35));
+        JButton btnBack = new JButton("Back");
+        JButton btnNext = new JButton("Next");
 
-        JPanel buttonGroup = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        buttonGroup.setOpaque(false);
-        buttonGroup.add(btnBack);
-        buttonGroup.add(btnNext);
+        btnNext.setPreferredSize(new Dimension(130, 45));
+        btnNext.setBackground(new Color(41, 128, 185));
+        btnNext.setForeground(Color.WHITE);
+        btnNext.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnNext.setFocusPainted(false);
+        btnNext.setOpaque(true);
+        btnNext.setBorderPainted(false);
+        btnNext.setContentAreaFilled(true);
 
-        footerPanel.add(buttonGroup, BorderLayout.EAST);
+        btnNext.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) { btnNext.setBackground(new Color(52, 152, 219)); }
+            public void mouseExited(MouseEvent e) { btnNext.setBackground(new Color(41, 128, 185)); }
+        });
+
+        btnBack.setPreferredSize(new Dimension(110, 45));
+        btnBack.setBackground(new Color(245, 245, 245));
+        btnBack.setFocusPainted(false);
 
         btnNext.addActionListener(e -> {
             if (currentStep < TOTAL_STEPS) {
                 currentStep++;
                 cardLayout.show(cardsPanel, "Step" + currentStep);
-                updateButtons();
-            } else if (currentStep == TOTAL_STEPS) {
-                JOptionPane.showMessageDialog(this, "Session Finished Successfully!");
+                updateStepIndicator();
+
+                for (Component comp : cardsPanel.getComponents()) {
+                    if (comp.isVisible() && comp instanceof StepPanel) {
+                        ((StepPanel) comp).loadData();
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Measurement Simulation Completed!");
             }
         });
 
@@ -56,28 +80,48 @@ public class MainFrame extends JFrame {
             if (currentStep > 1) {
                 currentStep--;
                 cardLayout.show(cardsPanel, "Step" + currentStep);
-                updateButtons();
+                updateStepIndicator();
             }
         });
 
-        add(cardsPanel, BorderLayout.CENTER);
-        add(footerPanel, BorderLayout.SOUTH);
+        footer.add(btnBack);
+        footer.add(btnNext);
+        add(footer, BorderLayout.SOUTH);
 
-        updateButtons();
+        updateStepIndicator();
     }
 
-    private void updateButtons() {
-        btnBack.setEnabled(currentStep > 1);
-        btnNext.setText(currentStep == TOTAL_STEPS ? "Finish" : "Next");
+    private void createStepIndicator() {
+        stepIndicatorBar = new JPanel(new GridLayout(1, 5, 0, 0));
+        stepIndicatorBar.setPreferredSize(new Dimension(0, 60));
+        stepIndicatorBar.setBackground(new Color(245, 245, 245));
+
+        String[] steps = {"Profile", "Define", "Plan", "Collect", "Analyse"};
+        for (int i = 0; i < steps.length; i++) {
+            JLabel lbl = new JLabel((i + 1) + ". " + steps[i], JLabel.CENTER);
+            lbl.setOpaque(true);
+            lbl.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            lbl.setForeground(new Color(150, 150, 150));
+            lbl.setBackground(new Color(245, 245, 245));
+            lbl.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, new Color(220, 220, 220)));
+
+            stepLabels.add(lbl);
+            stepIndicatorBar.add(lbl);
+        }
     }
 
-    private JPanel createPlaceholderPanel(String text) {
-        JPanel p = new JPanel(new GridBagLayout());
-        p.setBackground(Color.WHITE);
-        JLabel lbl = new JLabel(text);
-        lbl.setFont(new Font("Segoe UI", Font.ITALIC, 20));
-        p.add(lbl);
-        return p;
+    private void updateStepIndicator() {
+        for (int i = 0; i < stepLabels.size(); i++) {
+            if (i + 1 == currentStep) {
+                stepLabels.get(i).setForeground(new Color(41, 128, 185));
+                stepLabels.get(i).setBackground(Color.WHITE);
+                stepLabels.get(i).setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, new Color(41, 128, 185)));
+            } else {
+                stepLabels.get(i).setForeground(new Color(150, 150, 150));
+                stepLabels.get(i).setBackground(new Color(245, 245, 245));
+                stepLabels.get(i).setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, new Color(220, 220, 220)));
+            }
+        }
     }
 
     public static void main(String[] args) {

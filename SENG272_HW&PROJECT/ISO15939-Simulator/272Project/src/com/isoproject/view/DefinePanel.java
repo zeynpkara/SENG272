@@ -2,130 +2,67 @@ package com.isoproject.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
-public class MainFrame extends JFrame {
-    private CardLayout cardLayout = new CardLayout();
-    private JPanel cardsPanel = new JPanel(cardLayout);
-    private int currentStep = 1;
-    private final int TOTAL_STEPS = 5;
+public class DefinePanel extends StepPanel {
+    private JRadioButton rbProduct, rbProcess;
+    private JRadioButton rbEducation, rbHealth;
+    private JComboBox<String> cbScenarios;
+    private ButtonGroup typeGroup, modeGroup;
 
-
-    private JPanel stepIndicatorBar;
-    private ArrayList<JLabel> stepLabels = new ArrayList<>();
-
-    public MainFrame() {
-        setTitle("ISO 15939 Measurement Simulator - Zeynep Kara");
-        setSize(1100, 750);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
-
-
-        createStepIndicator();
-        add(stepIndicatorBar, BorderLayout.NORTH);
-
-
-        cardsPanel.add(new ProfilePanel(), "Step1");
-        cardsPanel.add(new DefinePanel(), "Step2");
-        cardsPanel.add(new PlanPanel(), "Step3");
-        cardsPanel.add(new CollectPanel(), "Step4");
-        cardsPanel.add(new AnalysePanel(), "Step5");
-        add(cardsPanel, BorderLayout.CENTER);
-
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 25, 15));
-        footer.setBackground(Color.WHITE);
-        footer.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(230, 230, 230)));
-
-        JButton btnBack = new JButton("Back");
-        JButton btnNext = new JButton("Next");
-
-        btnNext.setPreferredSize(new Dimension(130, 45));
-        btnNext.setBackground(new Color(41, 128, 185));
-        btnNext.setForeground(Color.WHITE);
-        btnNext.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnNext.setFocusPainted(false);
-        btnNext.setOpaque(true);
-        btnNext.setBorderPainted(false);
-        btnNext.setContentAreaFilled(true);
-
-        btnNext.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) { btnNext.setBackground(new Color(52, 152, 219)); }
-            public void mouseExited(MouseEvent e) { btnNext.setBackground(new Color(41, 128, 185)); }
-        });
-
-        btnBack.setPreferredSize(new Dimension(110, 45));
-        btnBack.setBackground(new Color(245, 245, 245));
-        btnBack.setFocusPainted(false);
-
-        btnNext.addActionListener(e -> {
-            if (currentStep < TOTAL_STEPS) {
-                currentStep++;
-                cardLayout.show(cardsPanel, "Step" + currentStep);
-                updateStepIndicator();
-
-                for (Component comp : cardsPanel.getComponents()) {
-                    if (comp.isVisible() && comp instanceof StepPanel) {
-                        ((StepPanel) comp).loadData();
-                    }
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Measurement Simulation Completed!");
-            }
-        });
-
-        btnBack.addActionListener(e -> {
-            if (currentStep > 1) {
-                currentStep--;
-                cardLayout.show(cardsPanel, "Step" + currentStep);
-                updateStepIndicator();
-            }
-        });
-
-        footer.add(btnBack);
-        footer.add(btnNext);
-        add(footer, BorderLayout.SOUTH);
-
-        updateStepIndicator();
+    public DefinePanel() {
+        super("Define Scope", "STEP 2");
+        initComponents();
     }
 
-    private void createStepIndicator() {
-        stepIndicatorBar = new JPanel(new GridLayout(1, 5, 0, 0));
-        stepIndicatorBar.setPreferredSize(new Dimension(0, 60));
-        stepIndicatorBar.setBackground(new Color(245, 245, 245));
+    private void initComponents() {
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
 
-        String[] steps = {"Profile", "Define", "Plan", "Collect", "Analyse"};
-        for (int i = 0; i < steps.length; i++) {
-            JLabel lbl = new JLabel((i + 1) + ". " + steps[i], JLabel.CENTER);
-            lbl.setOpaque(true);
-            lbl.setFont(new Font("Segoe UI", Font.BOLD, 13));
-            lbl.setForeground(new Color(150, 150, 150));
-            lbl.setBackground(new Color(245, 245, 245));
-            lbl.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, new Color(220, 220, 220)));
+        JLabel lblTitle = new JLabel("Measurement Scope Definition");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.insets = new Insets(10, 10, 30, 10);
+        centerPanel.add(lblTitle, gbc);
 
-            stepLabels.add(lbl);
-            stepIndicatorBar.add(lbl);
-        }
+        gbc.gridwidth = 1;
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        centerPanel.add(new JLabel("Quality Type:"), gbc);
+        rbProduct = new JRadioButton("Product");
+        rbProcess = new JRadioButton("Process");
+        rbProduct.setOpaque(false); rbProcess.setOpaque(false);
+        typeGroup = new ButtonGroup();
+        typeGroup.add(rbProduct); typeGroup.add(rbProcess);
+        JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        p1.setOpaque(false);
+        p1.add(rbProduct); p1.add(rbProcess);
+        gbc.gridx = 1; centerPanel.add(p1, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2;
+        centerPanel.add(new JLabel("Domain Mode:"), gbc);
+        rbEducation = new JRadioButton("Education");
+        rbHealth = new JRadioButton("Health");
+        rbEducation.setOpaque(false); rbHealth.setOpaque(false);
+        modeGroup = new ButtonGroup();
+        modeGroup.add(rbEducation); modeGroup.add(rbHealth);
+        JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        p2.setOpaque(false);
+        p2.add(rbEducation); p2.add(rbHealth);
+        gbc.gridx = 1; centerPanel.add(p2, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        centerPanel.add(new JLabel("Select Scenario:"), gbc);
+        String[] scenarios = {"Scenario A (Education)", "Scenario B (Health)", "Scenario C (Usability)"};
+        cbScenarios = new JComboBox<>(scenarios);
+        gbc.gridx = 1; centerPanel.add(cbScenarios, gbc);
+
+        add(centerPanel, BorderLayout.CENTER);
     }
 
-    private void updateStepIndicator() {
-        for (int i = 0; i < stepLabels.size(); i++) {
-            if (i + 1 == currentStep) {
-                stepLabels.get(i).setForeground(new Color(41, 128, 185));
-                stepLabels.get(i).setBackground(Color.WHITE);
-                stepLabels.get(i).setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, new Color(41, 128, 185)));
-            } else {
-                stepLabels.get(i).setForeground(new Color(150, 150, 150));
-                stepLabels.get(i).setBackground(new Color(245, 245, 245));
-                stepLabels.get(i).setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, new Color(220, 220, 220)));
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        System.setProperty("apple.laf.useScreenMenuBar", "true");
-        SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
-    }
+    @Override public boolean validateInput() { return true; }
+    @Override public void loadData() {}
 }

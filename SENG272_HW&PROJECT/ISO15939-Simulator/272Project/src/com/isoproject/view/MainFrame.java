@@ -12,7 +12,7 @@ public class MainFrame extends JFrame {
     private int currentStep = 1;
     private final int TOTAL_STEPS = 5;
 
-    
+
     private JPanel stepIndicatorBar;
     private ArrayList<JLabel> stepLabels = new ArrayList<>();
 

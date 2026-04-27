@@ -9,56 +9,57 @@ public class ProfilePanel extends StepPanel {
     private JTextField txtSessionName;
 
     public ProfilePanel() {
-        super();
+        super("User Profile", "STEP 1");
         initComponents();
     }
 
     private void initComponents() {
-        JLabel lblTitle = new JLabel("Step 1: Enter Profile Information", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblTitle.setForeground(new Color(44, 62, 80)); // Koyu lacivert/gri tonu
-        lblTitle.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
-        add(lblTitle, BorderLayout.NORTH);
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        JPanel formWrapper = new JPanel(new GridBagLayout()); // Daha esnek kontrol sağlar
-        formWrapper.setBackground(Color.WHITE);
+        JPanel headerBar = new JPanel(new BorderLayout());
+        headerBar.setBackground(new Color(41, 128, 185));
+        headerBar.setPreferredSize(new Dimension(0, 60));
+        JLabel lblHeader = new JLabel("  ISO 15939 SIMULATOR", JLabel.LEFT);
+        lblHeader.setForeground(Color.WHITE);
+        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        headerBar.add(lblHeader, BorderLayout.WEST);
+        contentPanel.add(headerBar, BorderLayout.NORTH);
+
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Elemanlar arası boşluk
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
 
-        Font labelFont = new Font("Segoe UI", Font.PLAIN, 14);
+        JLabel lblFormTitle = new JLabel("User Profile Details");
+        lblFormTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblFormTitle.setForeground(new Color(44, 62, 80));
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        formPanel.add(lblFormTitle, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 0;
-        JLabel lbl1 = new JLabel("Username:");
-        lbl1.setFont(labelFont);
-        formWrapper.add(lbl1, gbc);
+        gbc.gridwidth = 1;
+        addStyledField(formPanel, "Username", txtUsername = new JTextField(20), gbc, 1);
+        addStyledField(formPanel, "School/Organization", txtSchool = new JTextField(20), gbc, 2);
+        addStyledField(formPanel, "Session Name", txtSessionName = new JTextField(20), gbc, 3);
 
+        contentPanel.add(formPanel, BorderLayout.CENTER);
+
+        add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private void addStyledField(JPanel p, String label, JTextField tf, GridBagConstraints gbc, int y) {
+        gbc.gridy = y;
+        gbc.gridx = 0;
+        p.add(new JLabel(label), gbc);
         gbc.gridx = 1;
-        txtUsername = new JTextField(20);
-        txtUsername.setPreferredSize(new Dimension(250, 35));
-        formWrapper.add(txtUsername, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 1;
-        JLabel lbl2 = new JLabel("School/Organization:");
-        lbl2.setFont(labelFont);
-        formWrapper.add(lbl2, gbc);
-
-        gbc.gridx = 1;
-        txtSchool = new JTextField(20);
-        txtSchool.setPreferredSize(new Dimension(250, 35));
-        formWrapper.add(txtSchool, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 2;
-        JLabel lbl3 = new JLabel("Session Name:");
-        lbl3.setFont(labelFont);
-        formWrapper.add(lbl3, gbc);
-
-        gbc.gridx = 1;
-        txtSessionName = new JTextField(20);
-        txtSessionName.setPreferredSize(new Dimension(250, 35));
-        formWrapper.add(txtSessionName, gbc);
-
-        add(formWrapper, BorderLayout.CENTER);
+        tf.setPreferredSize(new Dimension(250, 40));
+        tf.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        p.add(tf, gbc);
     }
 
     @Override public boolean validateInput() { return !txtUsername.getText().isEmpty(); }

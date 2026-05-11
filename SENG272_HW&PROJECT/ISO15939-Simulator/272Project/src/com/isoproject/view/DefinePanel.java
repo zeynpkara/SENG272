@@ -30,6 +30,7 @@ public class DefinePanel extends StepPanel {
         gbc.gridwidth = 1;
         gbc.insets = new Insets(10, 10, 10, 10);
 
+        // Quality Type Selection
         gbc.gridx = 0; gbc.gridy = 1;
         centerPanel.add(new JLabel("Quality Type:"), gbc);
         rbProduct = new JRadioButton("Product");
@@ -46,9 +47,16 @@ public class DefinePanel extends StepPanel {
         centerPanel.add(new JLabel("Domain Mode:"), gbc);
         rbEducation = new JRadioButton("Education");
         rbHealth = new JRadioButton("Health");
+
+        rbEducation.setSelected(true);
+
         rbEducation.setOpaque(false); rbHealth.setOpaque(false);
         modeGroup = new ButtonGroup();
         modeGroup.add(rbEducation); modeGroup.add(rbHealth);
+
+        rbEducation.addActionListener(e -> SessionData.selectedMode = "Education");
+        rbHealth.addActionListener(e -> SessionData.selectedMode = "Health");
+
         JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         p2.setOpaque(false);
         p2.add(rbEducation); p2.add(rbHealth);

@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CollectPanel extends StepPanel {
-    private JTextField txtSusScore;
-    private JTextField txtOnboardingTime;
-    private JLabel lblSusCalculated;
-    private JLabel lblOnboardingCalculated;
+    private JTextField txtMetric1;
+    private JTextField txtMetric2;
+    private JLabel lblMetric1Name;
+    private JLabel lblMetric2Name;
+    private JLabel lblMetric1Calculated;
+    private JLabel lblMetric2Calculated;
 
     public CollectPanel() {
         super("Data Collection", "STEP 4");
@@ -27,25 +29,31 @@ public class CollectPanel extends StepPanel {
         centerPanel.add(lblTitle, gbc);
 
         gbc.gridwidth = 1; gbc.gridy = 1;
-        centerPanel.add(new JLabel("SUS Score (0-100):"), gbc);
-        txtSusScore = new JTextField(10);
-        gbc.gridx = 1; centerPanel.add(txtSusScore, gbc);
-        lblSusCalculated = new JLabel("Score: -");
-        gbc.gridx = 2; centerPanel.add(lblSusCalculated, gbc);
+        lblMetric1Name = new JLabel("Metric 1:");
+        centerPanel.add(lblMetric1Name, gbc);
+        txtMetric1 = new JTextField(10);
+        gbc.gridx = 1; centerPanel.add(txtMetric1, gbc);
+        lblMetric1Calculated = new JLabel("Score: -");
+        gbc.gridx = 2; centerPanel.add(lblMetric1Calculated, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
-        centerPanel.add(new JLabel("Onboarding Time (min):"), gbc);
-        txtOnboardingTime = new JTextField(10);
-        gbc.gridx = 1; centerPanel.add(txtOnboardingTime, gbc);
-        lblOnboardingCalculated = new JLabel("Score: -");
-        gbc.gridx = 2; centerPanel.add(lblOnboardingCalculated, gbc);
+        lblMetric2Name = new JLabel("Metric 2:");
+        centerPanel.add(lblMetric2Name, gbc);
+        txtMetric2 = new JTextField(10);
+        gbc.gridx = 1; centerPanel.add(txtMetric2, gbc);
+        lblMetric2Calculated = new JLabel("Score: -");
+        gbc.gridx = 2; centerPanel.add(lblMetric2Calculated, gbc);
 
         JButton btnCalculate = new JButton("Calculate Scores");
         btnCalculate.setBackground(new Color(41, 128, 185));
         btnCalculate.setForeground(Color.WHITE);
+        btnCalculate.setFont(new Font("Segoe UI", Font.BOLD, 14)); 
         btnCalculate.setFocusPainted(false);
-        btnCalculate.addActionListener(e -> calculateLocalScores());
 
+        btnCalculate.setOpaque(true);
+        btnCalculate.setBorderPainted(false);
+
+        btnCalculate.addActionListener(e -> calculateLocalScores());
         gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 3;
         gbc.insets = new Insets(30, 10, 10, 10);
         centerPanel.add(btnCalculate, gbc);
@@ -55,19 +63,50 @@ public class CollectPanel extends StepPanel {
 
     private void calculateLocalScores() {
         try {
-            double sus = Double.parseDouble(txtSusScore.getText());
-            double onboarding = Double.parseDouble(txtOnboardingTime.getText());
+            double val1 = Double.parseDouble(txtMetric1.getText());
+            double val2 = Double.parseDouble(txtMetric2.getText());
+            double s1 = 0, s2 = 0;
 
-            double susScore = 1.0 + ((sus - 0) / (100 - 0)) * 4.0;
-            double onbScore = 5.0 - ((onboarding - 0) / (60 - 0)) * 4.0;
+            if ("Health".equals(SessionData.selectedMode)) {
+                s1 = 1.0 + ((val1 - 0) / (100 - 0)) * 4.0;
+                s2 = 5.0 - ((val2 - 0) / (500 - 0)) * 4.0;
+            } else {
+                s1 = 1.0 + ((val1 - 0) / (100 - 0)) * 4.0;
+                s2 = 5.0 - ((val2 - 0) / (60 - 0)) * 4.0;
+            }
 
-            lblSusCalculated.setText(String.format("Score: %.1f", Math.min(5, Math.max(1, susScore))));
-            lblOnboardingCalculated.setText(String.format("Score: %.1f", Math.min(5, Math.max(1, onbScore))));
+            double finalScore1 = Math.min(5.0, Math.max(1.0, s1));
+            double finalScore2 = Math.min(5.0, Math.max(1.0, s2));
+
+            lblMetric1Calculated.setText(String.format("Score: %.1f", finalScore1));
+            lblMetric2Calculated.setText(String.format("Score: %.1f", finalScore2));
+
+            SessionData.score1 = finalScore1;
+            SessionData.score2 = finalScore2;
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Please enter valid numeric values!");
         }
     }
 
-    @Override public boolean validateInput() { return !txtSusScore.getText().isEmpty(); }
-    @Override public void loadData() {}
+    @Override
+    public boolean validateInput() {
+        return !txtMetric1.getText().isEmpty() && !txtMetric2.getText().isEmpty();
+    }
+
+    @Override
+    public void loadData() {
+        if ("Health".equals(SessionData.selectedMode)) {
+            lblMetric1Name.setText("Uptime (%):");
+            lblMetric2Name.setText("Response Time (ms):");
+        } else {
+            lblMetric1Name.setText("SUS Score (0-100):");
+            lblMetric2Name.setText("Onboarding Time (min):");
+        }
+
+        txtMetric1.setText("");
+        txtMetric2.setText("");
+        lblMetric1Calculated.setText("Score: -");
+        lblMetric2Calculated.setText("Score: -");
+    }
 }

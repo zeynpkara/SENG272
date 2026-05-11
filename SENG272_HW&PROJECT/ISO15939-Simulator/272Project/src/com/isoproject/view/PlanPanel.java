@@ -52,8 +52,13 @@ public class PlanPanel extends StepPanel {
     @Override
     public void loadData() {
         tableModel.setRowCount(0);
-        tableModel.addRow(new Object[]{"Usability", "SUS Score", "0.50", "Higher↑", "Points", "0-100"});
-        tableModel.addRow(new Object[]{"Usability", "Onboarding Time", "0.50", "Lower↓", "Minutes", "0-60"});
-        tableModel.addRow(new Object[]{"Performance", "Response Time", "1.00", "Lower↓", "ms", "0-500"});
+
+        if ("Health".equals(SessionData.selectedMode)) {
+            tableModel.addRow(new Object[]{"Reliability", "Uptime (%)", "0.60", "Higher↑", "%", "0-100"});
+            tableModel.addRow(new Object[]{"Performance", "Response Time (ms)", "0.40", "Lower↓", "ms", "0-500"});
+        } else {
+            tableModel.addRow(new Object[]{"Usability", "SUS Score", "0.50", "Higher↑", "Points", "0-100"});
+            tableModel.addRow(new Object[]{"Usability", "Onboarding Time", "0.50", "Lower↓", "Minutes", "0-60"});
+        }
     }
 }

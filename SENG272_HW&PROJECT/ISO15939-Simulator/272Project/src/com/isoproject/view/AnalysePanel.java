@@ -7,7 +7,7 @@ import java.awt.*;
 public class AnalysePanel extends StepPanel {
     private JProgressBar pbOverall;
     private JLabel lblStatus;
-    private JLabel lblScoreNumber; // Progress bar içindeki yazıyı dışarı aldık
+    private JLabel lblScoreNumber; 
     private JPanel detailsPanel;
     private JLabel lblDetail1;
     private JLabel lblDetail2;
@@ -197,7 +197,7 @@ public class AnalysePanel extends StepPanel {
             g2.drawString(name1, 15, 30);
 
             g2.setColor(new Color(52, 152, 219));
-            g2.fillRoundRect(15, 40, bar1Width, 22, 8, 8); // Barları biraz kalınlaştırdım
+            g2.fillRoundRect(15, 40, bar1Width, 22, 8, 8); 
 
             g2.setColor(Color.BLACK);
             g2.drawString(String.format("%.1f", val1), 25 + bar1Width, 55);

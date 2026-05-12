@@ -2,7 +2,7 @@ ISO/IEC 15939 Measurement Process Simulator
 
 
 Student Name: Zeynep Kara
-Student ID: [Öğrenci Numaranı Yaz]
+Student ID: 202027012
 Course: Software Project II
 Assignment: ISO 15939 Measurement Process Simulator
 

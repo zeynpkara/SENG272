@@ -13,7 +13,7 @@ PROJECT STRUCTURE:
 - /com/isoproject/main/MainFrame.java : Entry point and controller for the Wizard navigation (CardLayout).
 - /com/isoproject/view/ : Contains all abstract (StepPanel) and concrete UI panels (ProfilePanel, DefinePanel, PlanPanel, CollectPanel, AnalysePanel).
 - /com/isoproject/view/SessionData.java : Acts as the central 'Model' for State Management, storing selections and calculated scores across steps.
-- screenshot.jpg : A visual snapshot of the application running (Step 3: Plan).
+
 
 HOW TO COMPILE AND RUN (Command Line):
 1. Open your terminal or command prompt.

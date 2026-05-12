@@ -45,7 +45,6 @@ public class ProfilePanel extends StepPanel {
         addStyledField(formPanel, "Session Name", txtSessionName = new JTextField(20), gbc, 3);
 
         contentPanel.add(formPanel, BorderLayout.CENTER);
-
         add(contentPanel, BorderLayout.CENTER);
     }
 
@@ -62,6 +61,35 @@ public class ProfilePanel extends StepPanel {
         p.add(tf, gbc);
     }
 
-    @Override public boolean validateInput() { return !txtUsername.getText().isEmpty(); }
-    @Override public void loadData() {}
+    @Override
+    public boolean validateInput() {
+        if (txtUsername.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter your username to continue.",
+                    "Missing Information",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        if (txtSchool.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter your school or organization to continue.",
+                    "Missing Information",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        if (txtSessionName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter a session name to continue.",
+                    "Missing Information",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void loadData() {}
 }
